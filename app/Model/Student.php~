@@ -1,0 +1,176 @@
+<?php
+//App::uses('Student','Model');
+class Student extends AppModel {
+
+    public $hasOne = array(
+	'Uceresult' => array(
+	    'className' => 'Uceresult',
+	    'foreignKey' => 'student_id',
+	    'dependent' => true
+	),
+
+	'Pleresult' => array(
+	    'className' => 'Pleresult',
+	    'foreignKey' => 'student_id',
+	    'dependent' => true
+	)
+    );
+
+/*function beforeValidate($options = array()){
+    if(empty($this->data["Student"]['id']))
+    {
+        return true;
+    }
+    else
+    {
+	$extension = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/jpg');
+        $isValidFile = in_array($this->data['Student']['picturepath']['type'], $extension);
+        if(empty($this->data['Student']['picturepath']['name'])){
+        unset($this->data["Student"]["picturepath"]);
+        }
+        return true; //this is required, otherwise validation will always fail
+    }
+}
+*/
+    public $validate = array(
+      'registrationnumber' => array(
+	  'registrationnumberRule-2' => array(
+	      'rule' => 'isUnique',
+	      'message' => 'This registration number is already taken, please enter another one',
+	   )   
+      ),
+      'picturepath' => array(
+/*    'rule1'=>array(
+        'rule' => array('extension',array('jpeg','jpg','png','gif')),
+        'required' => 'create',
+        'allowEmpty' => true,
+        'message' => 'Only jpeg, jpg, png and gif images can be uploaded',
+        'on' => 'create',
+        'last'=>true
+    ),
+    'rule2'=>array(
+        'rule' => array('extension',array('jpeg','jpg','png','gif')),
+        'message' => 'Only jpeg, jpg, png and gif images can be uploaded',
+        'on' => 'update',
+    ),
+*/
+
+   'checksize' => array(
+       'allowEmpty' => true,
+       'rule' => array('checkfilesize'),
+       'message' => 'Your image file must be less than 6MB',
+    ),
+
+    'rule2'=>array(
+        'allowEmpty' => true,
+        'rule' => array('checkimagetype'),
+        'message' => 'Select Valid Image file type, The only types allowed are jpeg,png and gif formats',
+    )
+
+
+//'rule' => array('checkValidImage'), 
+//'allowEmpty' => true,
+	)        
+    );
+
+ /*public function checkValidImage($field)
+      {
+
+        $extension = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/jpg');
+        $isValidFile = in_array($field['picturepath']['type'], $extension);
+        $errors = array();
+        $editMethod = false;
+        if(!empty($this->data['Student']['id'])) // It will work for Update Method
+        {
+          if(!empty($this->data['Student']['picturepath']['name'] ))
+          {
+            if (($field['picturepath']['error'] == 1)) 
+            {
+                $errors [] = "Please upload jpg,png or gif files with size 2 MB.";
+            }
+            else if (empty($field['picturepath']['name']))
+            {
+                $errors [] = "Please upload image";
+            } 
+            else if ($field['picturepath']['size'] >= 2097152) {
+                $errors [] = "Please upload jpg,png or gif files with size 2 MB.";
+            }
+            else if ($isValidFile !=1)
+            {
+
+                $errors [] = "Please select file in gif,jpeg,png format.";
+            }
+
+          }else
+                {
+                    $errors [] = "Please select file in gif,jpeg,png format.";
+                }
+
+        }
+        else
+        {
+            if(!empty($this->data['ModelName']['picturepath']['name'] )) // It will work for Create Method
+            {
+                if (($field['picturepath']['error'] == 1)) 
+                {
+                    $errors [] = "Please upload jpg,png or gif files with size 2 MB.";
+                }
+                else if (empty($field['picturepath']['name']))
+                {
+                    $errors [] = "Please upload image";
+                } 
+                else if ($field['picturepath']['size'] >= 2097152) {
+                    $errors [] = "Please upload jpg,png or gif files with size 2 MB.";
+                }
+                else if (!(in_array($field['picturepath']['type'], $extension)))
+                {
+                    $errors [] = "Please select file in gif,jpeg,png format.";
+                }
+
+            }
+
+
+
+        }
+
+        if (!empty($errors))
+        {
+            return implode("\n", $errors);
+        }
+        return true;
+    }
+*/
+public function checkfilesize($check)
+{
+    // Shift the array to easily access $_POST
+    $uploadData = array_shift($check);
+
+    // Basic checks
+    if ($uploadData['size'] >= 6291456)
+    {
+        return false;
+    }else
+    {
+	return true;
+    }
+}
+
+public function checkimagetype($check)
+{
+    // Shift the array to easily access $_POST
+    $uploadData = array_shift($check);
+
+    $extension = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/jpg');
+    $isValidFile = in_array($uploadData['type'], $extension);
+
+    // Basic checks
+    if ($isValidFile || ((!isset($uploadData['error']) && $uploadData['error'] != 0) || (empty( $uploadData['tmp_name']) && $uploadData['tmp_name'] == 'none')))
+    {
+        return true;
+    }else
+    {
+	return false;
+    }
+}
+}
+?>
