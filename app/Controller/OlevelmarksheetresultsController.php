@@ -16,7 +16,7 @@ class OlevelmarksheetresultsController extends AppController {
 	
 	    if($this->request->data['criterea'] === "singlestudent"){
 	  
-		$this->loadModel('Schooldonesubject');  
+		$this->loadModel('Schooldonesubject');   
 		$this->loadModel('Schooldoneexam');
 		$foundsubjectname = $this->Schooldonesubject->find('all', 
 		    array(
