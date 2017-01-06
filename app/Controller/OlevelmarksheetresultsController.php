@@ -43,7 +43,7 @@ class OlevelmarksheetresultsController extends AppController {
 		$students = $this->Student->findAllByRegistrationnumber($registrationnumber);
 	      
 		if($students != null){
-	      
+		    /* may now not be so vital*/
 		    if(file_exists("img/studentpics/".$students[0]['Student']['picturenumber'].".jpg") == true){
 			
 			$webcampic = $students[0]['Student']['picturenumber'];		  
