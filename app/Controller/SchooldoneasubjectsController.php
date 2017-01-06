@@ -211,6 +211,7 @@ class SchooldoneasubjectsController extends AppController {
 		}
 	    }
 	    
+	    
 	    $modifiedshortsubjectname = $this->request->data['Schooldoneasubject']['shortsubjectname'];
 	    
 	    if($shortsubjectnametobemodified != null && $modifiedshortsubjectname != null){
